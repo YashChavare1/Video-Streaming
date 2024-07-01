@@ -1,13 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import menu from "../Assests/MenuIcon.svg";
-import search from "../Assests/SearchIcon.svg"
+import search from "../Assests/SearchIcon.svg";
 import searchSmall from "../Assests/SearchIconSmall.svg";
 import youtubeLogo from "../Assests/YoutubeLogo.png";
 import userIcon from "../Assests/user.png";
 import { toggleMenu } from "../utils/appSlice";
 import { useEffect, useState } from "react";
-import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { YOUTUBE_CONTENT_SPECIFIED, YOUTUBE_SEARCH_API } from "../utils/constants";
 import { cacheResults } from "../utils/searchSlice";
+import { storeVideos } from "../utils/VideoSlice";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,30 +21,39 @@ const Header = () => {
     const debounceTimer = setTimeout(() => {
       if (searchCache[searchQuery]) {
         setSuggestions(searchCache[searchQuery]);
-      }
-      else {
+      } else {
         getSearchSuggestions();
       }
     }, 200);
 
     return () => {
       clearTimeout(debounceTimer);
-    }
+    };
   }, [searchQuery]);
 
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
-  }
+  };
 
   const getSearchSuggestions = async () => {
-    const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+    try {
+      const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+      const json = await data.json();
+      setSuggestions(json[1]);
+      dispatch(
+        cacheResults({
+          [searchQuery]: json[1],
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching search suggestions:", error);
+    }
+  };
+
+  const handleSearchQuery = async () => {
+    const data = await fetch(YOUTUBE_CONTENT_SPECIFIED + searchQuery);
     const json = await data.json();
-    setSuggestions(json[1]);
-    dispatch(
-      cacheResults({
-        [searchQuery]: json[1],
-      })
-    );
+    dispatch(storeVideos(json.items));
   }
 
   return (
@@ -54,13 +64,9 @@ const Header = () => {
           className="h-10 w-10 cursor-pointer"
           src={menu}
           alt="menu Icon"
-          onClick={() => toggleMenuHandler()}
+          onClick={toggleMenuHandler}
         />
-        <img
-          className="h-[4vmin] w-[10vmin] mx-2"
-          src={youtubeLogo}
-          alt="Youtube Logo"
-        />
+        <img className="h-[4vmin] w-[10vmin] mx-2" src={youtubeLogo} alt="Youtube Logo" />
       </div>
 
       {/* Search Bar */}
@@ -78,41 +84,34 @@ const Header = () => {
             />
             <button
               className="border border-gray-500 px-3 py-2 w-16 rounded-e-full items-center"
+              onClick={handleSearchQuery}
             >
-              <img
-                className="h-6 w-7"
-                src={search}
-                alt="search icon"
-              />
+              <img className="h-6 w-7" src={search} alt="search icon" />
             </button>
           </div>
 
           {/* Suggestions */}
-          {suggestions.length > 0 && showSuggestions && <div className="absolute top-full bg-white py-2 border border-gray-300 font-medium w-full shadow-2xl rounded-lg mt-1">
-            <ul className="pt-2 px-5">
-              {
-                suggestions.map(suggestion =>
+          {suggestions.length > 0 && showSuggestions && (
+            <div className="absolute top-full bg-white py-2 border border-gray-300 font-medium w-full shadow-2xl rounded-lg mt-1">
+              <ul className="pt-2 px-5">
+                {suggestions.map((suggestion) => (
                   <li
-                    className="pb-2 flex gap-3 items-center"
+                    className="pb-2 flex gap-3 items-center cursor-pointer"
                     key={suggestion}
                   >
                     <img src={searchSmall} alt="Search Icon" />
                     {suggestion}
                   </li>
-                )
-              }
-            </ul>
-          </div>}
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Profile Icon */}
       <div className="col-span-2 flex justify-end items-center">
-        <img
-          className="h-[5vmin] w-[5vmin]"
-          src={userIcon}
-          alt="user icon"
-        />
+        <img className="h-[5vmin] w-[5vmin]" src={userIcon} alt="user icon" />
       </div>
     </div>
   );

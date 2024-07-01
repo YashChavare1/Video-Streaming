@@ -70,7 +70,7 @@ const VideoCard = ({ info, viewCount }) => {
                 <li className="font-bold py-2">{truncateTitle(title)}</li>
                 <li className="text-gray-500 font-normal hover:text-black" title={channelTitle}>{channelTitle}</li>
                 {
-                    !viewCount && <li className="text-gray-500 font-normal">{formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}</li>
+                    statistics && <li className="text-gray-500 font-normal">{formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}</li>
                 }
             </ul>
         </div>
