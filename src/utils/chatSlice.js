@@ -7,11 +7,11 @@ const chatSlice = createSlice({
         messages: []
     },
     reducers: {
-        addMessage: (state, action) => {
+        addMessage: (state, actions) => {
             if(state.messages.length > LIVE_CHAT_LIMIT) {
                 state.messages.shift();
             }
-            state.messages.push(action.payload);
+            state.messages.push(actions.payload);
         }
     }
 });

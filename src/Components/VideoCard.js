@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const VideoCard = ({ info }) => {
+const VideoCard = ({ info, viewCount }) => {
     const isMenuOpen = useSelector(store => store.app.isMenuOpen);
     const { snippet, statistics } = info;
     const { channelTitle, title, thumbnails } = snippet;
@@ -69,7 +69,9 @@ const VideoCard = ({ info }) => {
             <ul className="p-2">
                 <li className="font-bold py-2">{truncateTitle(title)}</li>
                 <li className="text-gray-500 font-normal hover:text-black" title={channelTitle}>{channelTitle}</li>
-                <li className="text-gray-500 font-normal">{formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}</li>
+                {
+                    !viewCount && <li className="text-gray-500 font-normal">{formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}</li>
+                }
             </ul>
         </div>
     )

@@ -16,7 +16,7 @@ const LiveChat = () => {
                 name: generateRandomName(),
                 message: getRandomMessage(),
             }))
-        }, 2000);
+        }, 700);
 
         return () => {
             clearInterval(chatPolling);
@@ -53,9 +53,9 @@ const LiveChat = () => {
                     value={liveMessage}
                     onChange={(event) => setLiveMessage(event.target.value)}
                 />
-                <div className='flex justify-end'>
-                    <button className='w-44 py-2 rounded-full hover:bg-gray-300 mr-5 text-xl'>Cancel</button>
-                    <button className='w-44 py-2 rounded-full bg-blue-500 text-xl text-white'>Send</button>
+                <div className='flex justify-evenly'>
+                    <button className='w-44 py-2 rounded-full hover:bg-gray-600 mr-5 text-xl bg-gray-500 text-white font-medium'>Cancel</button>
+                    <button className='w-44 py-2 rounded-full bg-blue-500 hover:bg-blue-600 text-xl text-white font-medium'>Send</button>
                 </div>
             </form>
         </div>

@@ -1,23 +1,32 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { closeMenu } from "../utils/appSlice";
 import { useSearchParams } from "react-router-dom";
 import CommentsContainer from "./CommentsContainer";
 import LiveChat from "./LiveChat";
 import { YOUTUBE_COMMENTS_API } from "../utils/constants";
+import RelatedVideosList from "./RelatedVideosList";
+import { addComments } from "../utils/commentSlice";
 
 const WatchPage = () => {
     const [searchParams] = useSearchParams();
+    const [comments, setComments] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(closeMenu());
+        videoComments(searchParams.get("v"))
     }, [dispatch]);
+
+    useEffect(() => {
+        videoComments(searchParams.get("v"))
+    }, [searchParams.get("v")]); 
 
     const videoComments = async (videoId) => {
         const data = await fetch(YOUTUBE_COMMENTS_API + videoId);
         const json = await data.json();
-        console.log(json);
+        setComments(json.items);
+        dispatch(addComments(json.items))
     }
 
     return (
@@ -52,10 +61,13 @@ const WatchPage = () => {
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
                         />
-                        <CommentsContainer />
+                        {
+                            comments && <CommentsContainer comments={comments} />
+                        }
                     </div>
                     <div className="w-[30vmax] h-[70vmin] relative">
                         <LiveChat />
+                        <RelatedVideosList />
                     </div>
                 </div>
             </div>
