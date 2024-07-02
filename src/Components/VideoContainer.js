@@ -27,7 +27,7 @@ const VideoContainer = () => {
     <div className="grid grid-cols-1 fixed pb-24 mr-5 md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4 mt-2 mb-2 flex-wrap h-[89vmin] overflow-y-scroll">
       {
         videos?.map((video) => (
-          <Link to={"/watch?v=" + video.id} key={video.id}>
+          <Link key={video.id} to={"/watch?v=" + video.id}>
             <VideoCard info={video} />
           </Link>
         ))
