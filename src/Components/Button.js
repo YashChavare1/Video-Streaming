@@ -7,7 +7,6 @@ const Button = ({ text }) => {
   const dispatch = useDispatch();
 
   const handleContentSearch = async() => {
-    console.log(text);
     const data = await fetch(YOUTUBE_CONTENT_SPECIFIED + text);
     const json = await data.json();
     dispatch(storeVideos(json.items));

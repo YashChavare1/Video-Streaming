@@ -9,13 +9,17 @@ import { toggleMenu } from '../utils/appSlice';
 import { cacheResults } from '../utils/searchSlice';
 import { storeVideos } from '../utils/VideoSlice';
 import { YOUTUBE_CONTENT_SPECIFIED, YOUTUBE_SEARCH_API } from '../utils/constants';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [focusedSuggestionIndex, setFocusedSuggestionIndex] = useState(-1);
   const searchCache = useSelector((store) => store.search);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
@@ -31,8 +35,28 @@ const Header = () => {
     };
   }, [searchQuery]);
 
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showSuggestions, suggestions, focusedSuggestionIndex]);
+
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
+  };
+
+  const handleKeyDown = (event) => {
+    if (showSuggestions && suggestions.length > 0) {
+      if (event.key === 'ArrowDown') {
+        setFocusedSuggestionIndex((prevIndex) => (prevIndex + 1) % suggestions.length);
+      } else if (event.key === 'ArrowUp') {
+        setFocusedSuggestionIndex((prevIndex) => (prevIndex - 1 + suggestions.length) % suggestions.length);
+      } else if (event.key === 'Enter') {
+        handleSuggestionSelection(suggestions[focusedSuggestionIndex]);
+      }
+    }
   };
 
   const getSearchSuggestions = async () => {
@@ -53,19 +77,20 @@ const Header = () => {
   const handleSearchQuery = async () => {
     const data = await fetch(YOUTUBE_CONTENT_SPECIFIED + searchQuery);
     const json = await data.json();
-    console.log(json);
     dispatch(storeVideos(json.items));
+    if(location.pathname !== "/") {
+      navigate("/");
+    }
   };
 
   const handleSuggestionSelection = (value) => {
     setSearchQuery(value);
     setShowSuggestions(false);
+    setFocusedSuggestionIndex(-1);
   };
 
   const handleBlur = () => {
-    setTimeout(() => {
       setShowSuggestions(false);
-    }, 100);
   };
 
   return (
@@ -105,10 +130,12 @@ const Header = () => {
           {/* Suggestions */}
           {suggestions.length > 0 && showSuggestions && (
             <div className="absolute top-full bg-white py-2 border border-gray-300 font-medium w-full shadow-2xl rounded-lg mt-1">
-              <div className="pt-2 px-5">
-                {suggestions.map((suggestion) => (
+              <div className="pt-2 px-0">
+                {suggestions.map((suggestion, index) => (
                   <div
-                    className="pb-2 flex gap-3 items-center cursor-pointer"
+                    className={`pb-2 px-5 py-2 flex gap-3 items-center cursor-pointer ${
+                      index === focusedSuggestionIndex ? 'bg-gray-200' : ''
+                    }`}
                     key={suggestion}
                     onMouseDown={() => handleSuggestionSelection(suggestion)}
                   >

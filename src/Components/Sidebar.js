@@ -40,10 +40,9 @@ const Sidebar = () => {
           />
         </div>}
         <ul>
-          <li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer"><Link to="/">Home</Link></li>
-          <li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Shorts</li>
-          <li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Video</li>
-          <li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Live</li>
+          <Link to="/"><li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Home</li></Link>
+          <Link to="/shorts"><li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Shorts</li></Link>
+          <Link to="/live"><li className="text-xl hover:shadow-md px-3 py-2 w-full hover:font-medium hover:bg-slate-100 cursor-pointer">Live</li></Link>
         </ul>
         <p className="font-semibold px-3 py-2 text-xl pt-5">Subscriptions</p>
         <ul className="">

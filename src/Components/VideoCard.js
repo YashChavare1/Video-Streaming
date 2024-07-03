@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const VideoCard = ({ info, viewCount }) => {
+const VideoCard = ({ info }) => {
     const isMenuOpen = useSelector(store => store.app.isMenuOpen);
     const { snippet, statistics } = info;
     const { channelTitle, title, thumbnails } = snippet;
@@ -59,19 +59,26 @@ const VideoCard = ({ info, viewCount }) => {
     }
 
     return (
-        <div className={isMenuOpen ? `w-[20vmax] h-80 shadow-lg box-border rounded-lg cursor-pointer` : `w-[23.5vmax]`}>
+        <div className={isMenuOpen ? `w-[20vmax] h-80 shadow-lg box-border rounded-lg cursor-pointer relative` : `w-[23.5vmax] relative`}>
             <img
-                className="rounded-lg w-full h-44"
+                className="rounded-lg w-full h-44 relative"
                 src={thumbnails.medium.url}
                 alt="thumbnail"
                 loading="lazy"
             />
+            {snippet.liveBroadcastContent==="live" && (
+                <div className="absolute bottom-[9.5rem] right-2 bg-red-500 text-white text-lg w-14 text-center font-bold py-1 px-2 rounded-md">
+                    Live
+                </div>
+            )}
             <ul className="p-2">
                 <li className="font-bold py-2">{truncateTitle(title)}</li>
                 <li className="text-gray-500 font-normal hover:text-black" title={channelTitle}>{channelTitle}</li>
-                {
-                    statistics && <li className="text-gray-500 font-normal">{formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}</li>
-                }
+                {statistics && (
+                    <li className="text-gray-500 font-normal">
+                        {formatViewCount(statistics.viewCount)} views • {timePeriod(snippet.publishedAt)}
+                    </li>
+                )}
             </ul>
         </div>
     )

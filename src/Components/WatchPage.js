@@ -27,6 +27,7 @@ const WatchPage = () => {
         const json = await data.json();
         setComments(json.items);
         dispatch(addComments(json.items))
+        console.log(json.items);
     }
 
     return (
