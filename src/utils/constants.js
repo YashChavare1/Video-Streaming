@@ -12,4 +12,6 @@ export const YOUTUBE_SEARCH_API = "https://suggestqueries.google.com/complete/se
 
 export const YOUTUBE_COMMENTS_API = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=20&key=" + process.env.REACT_APP_YOUTUBE_API_KEY + "&videoId=";
 
+export const YOUTUBE_API_LIVE_COMMENTS=`https://www.googleapis.com/youtube/v3/liveChat/messages?part=snippet&key=${process.env.REACT_APP_YOUTUBE_API_KEY}&liveChatId=`;
+
 export const LIVE_CHAT_LIMIT = 40;

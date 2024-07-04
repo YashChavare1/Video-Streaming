@@ -40,7 +40,7 @@ const VideoContainer = () => {
     }
 
     fetchData();
-  }, [location.pathname, videos]);
+  }, [location.pathname, allVideos, shorts, liveVideos]);
 
   const fetchVideos = async () => {
     const response = await fetch(YOUTUBE_API_MOST_POPULAR);
@@ -53,7 +53,6 @@ const VideoContainer = () => {
     const response = await fetch(YOUTUBE_API_SHORTS);
     const data = await response.json();
     dispatch(storeShorts(data.items));
-    console.log(data.items);
     setVideos(data.items);
   };
 
@@ -64,7 +63,7 @@ const VideoContainer = () => {
     setVideos(data.items);
   };
 
-  if(!videos.length) return <div className="flex justify-center text-5xl m-10 text-gray-500"><FontAwesomeIcon icon={faSpinner} spin /></div>
+  if (!videos.length) return <div className="flex justify-center text-5xl m-10 text-gray-500"><FontAwesomeIcon icon={faSpinner} spin /></div>
 
   return (
     <div className="grid grid-cols-1 fixed pb-24 mr-5 md:grid md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4 mt-2 mb-2 flex-wrap h-[89vmin] overflow-y-scroll">

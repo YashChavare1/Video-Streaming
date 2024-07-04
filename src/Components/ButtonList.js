@@ -4,7 +4,6 @@ const ButtonList = () => {
   const list = [
     'T20 Cricket',
     'Code Splitting',
-    'React',
     'Javascript',
     'Redux',
     'Express.JS',

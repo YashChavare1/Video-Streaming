@@ -6,12 +6,14 @@ import MainContainer from "./Components/MainContainer";
 import store from "./utils/store";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import WatchPage from "./Components/WatchPage";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Body = lazy(() => import("./Components/Body"));
 
 const appRouter = createBrowserRouter([{
   path: "/",
   element: 
-  <Suspense fallback={<h1>Loading...</h1>}>
+  <Suspense fallback={<div className="flex justify-center text-5xl m-10 text-gray-500"><FontAwesomeIcon icon={faSpinner} spin /></div>}>
     <Body />
   </Suspense>,
   children: [
